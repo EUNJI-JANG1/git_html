@@ -3,4 +3,5 @@
 1. git hub git hub
 2. git에서 내용 변경함
 
+3. git hub에서 2차로 문서 내용을 추가함
 
