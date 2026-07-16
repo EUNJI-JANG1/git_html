@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table 태그</title>
+</head>
+<body>
+    <!--
+    표를 만드는 태그: table, caption, th, tr, td, colgroup, col 
+    
+    colgroup: 열 단위로 기능을 적용할 수 있음
+    col: 열을 의미
+
+    caption: 표의 제목을 표시하는 태그
+    -->
+    <table border="1" width="500">
+        <caption><h2>시간표</h2></caption>
+        <colgroup>
+            <col>
+            <col style="background-color: yellow;">
+            <col>
+        </colgroup>
+        <tr>
+            <th>용도</th>
+            <th>중량</th>
+            <th>가격</th>
+            </tr>
+        <tr>
+            <td width="80">첫 번째 칸</td>
+            <td><img src="./../img/flower3.jpeg" width="100"></td>
+            <td style="color: blue;">세 번째 칸 세 번째 칸 세 번째 칸 세 번째 칸 세 번째 칸 세 번째 칸 </td>
+        </tr>
+        <tr style="color: red;">
+            <td>AAAAA</td>
+            <td>
+                <ol>
+                    <li>사과</li>
+                    <li>바나나</li>
+                    <li>파인애플</li>
+                </ol>
+            </td>
+            <td>CCCCC</td>
+        </tr>
+    </table>
+</body>
+</html>

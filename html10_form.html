@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>폼태그(input, select, textarea)</title>
+</head>
+<body>
+    <h2>폼태그(input)</h2>
+    <p>
+        input 태그: 1줄 텍스트, radio, checkbox, file첨부 등을 입력하는 폼
+    </p>
+    <!--
+        [method속성]
+        get 방식: 주소표시줄에 query 데이터로 정보를 노출하여 전송하는 방식, 폼 기본값
+        post 방식: 데이터를 숨겨서 서버로 전송하는 방식
+
+        [action속성]
+        폼의 정보를 서버로 가져가는 기능을 구현한 속성
+
+        placeholder : 입력안내글
+
+        name: 변수 지정
+
+        value: 기본 입력(표출) 값 지정, 서버로 넘길 값을 지정하는 역할도 함
+
+        max,minlengh : 문자 길이 지정
+
+        radio : 선택지로 묶기 위해선 name을 동일하게 지정, checked(기본 선택값으로 지정하는 속성)
+    -->
+    <form method="get" action="abc.jsp"> 
+        아이디 : <input type="text" name="userid" value="abcde" readonly maxlength="8" minlength="5"><br>
+        패스워드 : <input type="password" name="userpw" placeholder="password"><br>
+        이메일 : <input type="email" name="uesremail" value="abcde@nate.com" disabled><br>
+
+        수신여부 : <input type="radio" name="send" checked value="on">수신
+                  <input type="radio" name="send" value="off">비수신<br>
+
+        관심분야 : <input type="checkbox" name="inter" value="soccer" checked>축구
+                  <input type="checkbox" name="inter" value="basket">농구
+                  <input type="checkbox" name="inter" value="base">야구
+                  <input type="checkbox" name="inter" value="hand">배구 <br>
+
+        수량 : <input type="number" name="cnt" max="20" min="10" step="2" value="14"><br>
+        옵션수량 : <input type="range" name="cnt2" max="20" min="10" value="14"><br>
+        <hr>
+        날짜(date) : <input type="date" name="d1"><br>
+        날짜(datetime) : <input type="datetime-local" name="d2"><br>
+        날짜(time) : <input type="time" name="d3"><br>
+        날짜(month) : <input type="month" name="d4"><br>
+        날짜(week) : <input type="week" name="d5"><br>
+        <hr>
+        파일선택 : <input type="file" name="filename"><br>
+        숨김데이터: <input type="hidden" name="hname" value="홍길동"><br>
+        <hr>
+        문의 내용: <textarea name="qna" cols="50" rows="5">여러줄의 문자를 입력하는 박스</textarea><br>
+        리스트 박스: <select name="depart" size="5" multiple>
+                <!--value 값을 따로 지정하지 않아도 쿼리로 넘어감 보이는 텍스트랑 전송값을 다르게 하고 싶을 때 value 사용-->
+                <option value="A">기획부</option>
+                <option>총괄부</option>
+                <option>인사부</option>
+                <option>사업부</option>
+                <option selected>영업부</option>
+                </select><br>
+        optiongroup태그 :
+                <select name="language">
+                    <optpgroup label="FrontEnd">
+                        <option>HTML5</option>
+                        <option>CSS3</option>
+                        <option>JAVASCRIPT</option>
+                        <option>REACT</option>
+                    </optpgroup>
+                    <optgroup label="BackEnd">
+                        <option>JAVA</option>
+                        <option>SPRING</option>
+                        <option>MYBATIS</option>
+                    </optgroup>
+                </select>
+        <hr>
+        <input type="submit" value="전송하기">
+        <input type="button" value="전송하기" onclick="alert('버튼을 클릭하였습니다')">
+        <input type="reset" value="초기화">
+        <!--폼 태그 안에서 image 타입과 submit 타입의 기능은 같음-->
+        <input type="image" src="../img/smallbutton.png">
+    </form>
+</body>
+</html>

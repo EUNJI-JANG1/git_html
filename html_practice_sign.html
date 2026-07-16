@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입 폼</title>
+    <style>
+        #container {
+            width: 800px;
+            margin: 0 auto;
+        }
+
+        #container>h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form_row {
+            flex-wrap: row wrap;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid gray;
+        }
+
+        .button_row {
+            border-bottom: 1px solid gray;
+            text-align: center;
+            padding-bottom: 5px;
+        }
+    </style>
+    <script src="//t1.kakaocdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script>
+        function formCheck() {
+            //정규 표현식으로 유효한 데이터인지 확인
+
+            // 아이디에 대한 정규표현식
+            // 아이디 : 첫 번째 글자는 영어로, 숫자 및 영어(대소문자) 가능, 아이디 글자수는 5~12자 이내
+            var reg = /^[A-Za-z]{1}[A-Za-z0-9]{4,11}$/
+            if (!reg.test(document.getElementById("userId").value)) { //test(): 논리확인 메서드. 규칙에 맞으면 T,틀리면 F
+                document.getElementById("idMsg").innerHTML = "<span style='color: red'>사용이 불가능한 아이디입니다.</span>";
+                return false;
+            } else {
+                document.getElementById("idMsg").innerHTML = "<span style='color: green'>사용이 가능한 아이디입니다.</span>";
+            }
+
+            //비밀번호 정규표현식
+            // 비밀번호 : 영대소문자 및 숫자와 _*! 특수기호 가능, 비밀번호 글자수는 8~15자 이내
+            var reg = /^[A-Za-z0-9_*!]{8,10}$/;
+            var pwd1 = document.getElementById("userPW").value;
+            var pwd2 = document.getElementById("userPWcheck").value;
+            if (!reg.test(pwd1)) {
+                alert("비밀번호는 영대소문자, 숫자, 특수기호 _*!를 포함해 8~10자 이내로 가능합니다.");
+                return false;
+            }
+            if (pwd1 == "") {
+                alert("비밀번호를 입력해주세요");
+                return false;
+            }
+            if (pwd1 != pwd2) {
+                alert("비밀번호가 일치하지 않습니다.");
+                return false;
+            }
+
+            //이름에 대한 정규표현식
+            // 이름 : 한글 2~6자
+            var reg = /^[가-힣]{2,6}$/
+            if (!reg.test(document.getElementById("userName").value)) {
+                alert("이름은 한글 2~6자 이내로 입력해주세요");
+                return false;
+            }
+
+            // 전화번호
+            // 전화번호 합치기
+            // 첫번째 자리의 번호
+            var f_tel = document.getElementById('f_tel').value + "-";
+            var ml_tel = document.getElementById("m_tel").value + "-" + document.getElementById("l_tel").value;
+            var tel = f_tel + ml_tel;
+
+            //전화번호에 대한 정규표현식
+            //앞자리: 010,02,031,041,051,061 | 중간: 숫자 3~4자리 | 마지막: 숫자 4자리
+            reg = /^(010|02|031|041|051|061)[-][0-9]{3,4}[-][0-9]{4}$/
+            if (!reg.test(tel)) {
+                alert("연락처를 잘못 입력하였습니다.");
+                return false;
+            }
+
+            // 이메일
+            // 도메인이 3자리인 경우도 포함 ex) co.kr, .com ... -> ()? -> 있거나 없거나로 표현 가능
+            reg = /^[A-Za-z0-9]{5,10}[@][a-zA-Z0-9]{2,6}[.][a-zA-Z]{2,3}([a-zA-Z]{2,3})?$/
+            if (!reg.test(document.getElementById("userEmail").value)) {
+                alert("이메일을 잘못 입력하였습니다.");
+                return false;
+            }
+
+            // 우편번호, 주소, 상세주소가 입력되었는지 확인
+            zipCode = document.getElementById("userAdd_code").value;
+            address = document.getElementById("userAdd").value;
+            datail_add = document.getElementById("userAdd_Detail").value;
+
+            if (zipCode == "") {
+                alert("우편번호를 입력해주세요");
+                return false;
+            }
+            if (address == "") {
+                alert("주소를 입력해주세요");
+                return false;
+            }
+            if (detail_add == "") {
+                alert("상세주소를 입력해주세요");
+                return false;
+            }
+
+            // 취미
+            // 취미는 반드시 두 개 이상 선택
+            // ↓ hobbys[0] = <input type="checkbox" value="" checked="true"> ~ hobbys[6] = <input type="checkbox" value="" checked="false">
+            var hobbys = document.querySelectorAll(".hobbys");
+
+            var cnt = 0;
+            for (var i = 0; i < hobbys.length; i++) {
+                if (hobbys[i].checked) cnt++;
+            }
+
+            if (cnt < 2) {
+                alert("취미를 두 개 이상 선택해주세요");
+                return false;
+            }
+        }
+
+        //Daum API를 이용한 우편번호찾기
+        function daumPostCode() {
+            new kakao.Postcode({
+                oncomplete: function (data) {
+                    // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+                    // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+                    // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                    var addr = ''; // 주소 변수
+
+                    //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+                    if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                        addr = data.roadAddress;
+                    } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                        addr = data.jibunAddress;
+                    }
+
+                    // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                    document.getElementById('userAdd_code').value = data.zonecode;
+                    document.getElementById("userAdd").value = addr;
+                    // 커서를 상세주소 필드로 이동한다.
+                    document.getElementById("userAdd_Detail").focus();
+                }
+            }).open();
+        }
+    </script>
+</head>
+
+<body>
+    <div id="container">
+        <h2>회원가입 폼</h2>
+        <form action="/register" method="POST" onsubmit="return formCheck()">
+            <div class="form_row">
+                <label for="userId">아이디</label>
+                <input type="text" name="userId" id="userId" required minlength="5" maxlength="12" value="abcde">
+                <button type="button">아이디중복검사</button>
+                <div id="idMsg"></div>
+            </div>
+
+            <div class="form_row">
+                <label for="userPW">비밀번호</label>
+                <input type="password" name="userPW" id="userPW" required minlength="5" maxlength="12" value="12345678">
+            </div>
+
+            <div class="form_row">
+                <label>비밀번호확인</label>
+                <input type="password" name="userPWcheck" id="userPWcheck" required minlength="5" maxlength="12"
+                    value="12345678">
+            </div>
+
+            <div class="form_row">
+                <label>이름</label>
+                <input type="text" name="userName" id="userName" required minlength="2" maxlength="8" value="홍길동">
+            </div>
+
+            <div class="form_row">
+                <label>연락처</label>
+                <select name="f_tel" id="f_tel" style="width: 55px;">
+                    <option value="010">010</option>
+                    <option value="011">011</option>
+                </select>
+                - <input type="tel" id="m_tel" required maxlength="4" style="width: 60px;" value="1234"> - <input
+                    type="tel" id="l_tel" required maxlength="4" style="width: 65px;" value="5678">
+            </div>
+
+            <div class="form_row">
+                <label>이메일</label>
+                <input type="email" id="userEmail" required value="23456@naver.com">
+            </div>
+
+            <div class="form_row">
+                <label>우편번호</label>
+                <input type="text" id="userAdd_code" value="12345">
+                <input type="button" value="우편번호찾기" onclick="daumPostCode()">
+            </div>
+
+            <div class="form_row">
+                <label>주소</label>
+                <input type="text" id="userAdd" style="width: 400px;" value="영등포구">
+            </div>
+
+            <div class="form_row">
+                <label>상세주소</label>
+                <input type="text" id="userAdd_Detail" style="width: 300px;" value="402">
+            </div>
+            <div class="form_row">
+                <label>취미</label>
+                <input type="checkbox" name="hobby" class="hobbys" value="baseball" checked>
+                <label>야구</label>
+                <input type="checkbox" name="hobby" class="hobbys" value="bike">
+                <label>바이크</label>
+                <input type="checkbox" name="hobby" class="hobbys" value="hiking">
+                <label>등산</label>
+                <input type="checkbox" name="hobby" class="hobbys" value="shop">
+                <label>쇼핑</label>
+                <input type="checkbox" name="hobby" class="hobbys" value="bicycle">
+                <label>자전거</label>
+                <input type="checkbox" name="hobby" class="hobbys" value="walk">
+                <label>걷기</label>
+                <input type="checkbox" name="hobby" class="hobbys" value="movie">
+                <label>영화감상</label>
+            </div>
+            <div class="button_row">
+                <input type="submit" value="회원가입하기">
+            </div>
+
+        </form>
+    </div>
+</body>
+
+</html>
